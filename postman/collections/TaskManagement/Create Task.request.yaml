@@ -1,0 +1,19 @@
+$kind: http-request
+name: Create Task
+url: "{{BaseURL}}/api/tasks"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"title\": \"Learn .NET\",\r
+
+    \  \"description\": \"Complete assignment\"\r
+
+    }"
+auth:
+  credentials:
+    - key: token
+      value: "{{Token}}"
+  type: bearer
+order: 4000

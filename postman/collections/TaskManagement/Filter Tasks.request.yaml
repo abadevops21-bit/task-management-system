@@ -1,0 +1,11 @@
+$kind: http-request
+name: Filter Tasks
+url: "{{BaseURL}}/api/tasks?isCompleted=true"
+method: GET
+queryParams:
+  isCompleted: "true"
+auth:
+  credentials:
+    token: "{{Token}}"
+  type: bearer
+order: 5000

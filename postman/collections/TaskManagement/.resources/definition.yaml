@@ -1,0 +1,4 @@
+$kind: collection
+name: TaskManagement
+variables:
+  BaseURL: http://localhost:5170
