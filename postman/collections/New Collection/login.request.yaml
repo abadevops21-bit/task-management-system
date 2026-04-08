@@ -1,0 +1,5 @@
+$kind: http-request
+name: login
+url: "{{BaseURL}}/api/login"
+method: GET
+order: 4093802684169418

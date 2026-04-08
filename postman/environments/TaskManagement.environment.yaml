@@ -1,0 +1,5 @@
+name: TaskManagement
+values:
+  - key: 'https://localhost:7271'
+    value: ''
+    enabled: true
