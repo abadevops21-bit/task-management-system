@@ -7,11 +7,16 @@ namespace TaskManagementSystem.API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
-        
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        private readonly IWebHostEnvironment _env;
+
+        public ExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionMiddleware> logger,
+            IWebHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
         public async Task Invoke(HttpContext context)
@@ -24,12 +29,40 @@ namespace TaskManagementSystem.API.Middleware
             {
                 _logger.LogError(ex, "Unhandled exception occurred");
 
-                context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
 
-                await context.Response.WriteAsJsonAsync(new
+                // Default
+                var statusCode = (int)HttpStatusCode.InternalServerError;
+                var message = "Something went wrong. Please try again later.";
+
+                // Custom handling
+                switch (ex)
                 {
-                    message = ex.Message
-                });
+                    case UnauthorizedAccessException:
+                        statusCode = StatusCodes.Status401Unauthorized;
+                        message = "Unauthorized access";
+                        break;
+
+                    case KeyNotFoundException:
+                        statusCode = StatusCodes.Status404NotFound;
+                        message = ex.Message;
+                        break;
+
+                    case ArgumentException:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        message = ex.Message;
+                        break;
+                }
+
+                context.Response.StatusCode = statusCode;
+
+                var response = new
+                {
+                    statusCode,
+                    message = _env.IsDevelopment() ? ex.Message : message
+                };
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
         }
     }
