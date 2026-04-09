@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 using TaskManagementSystem.Application.DTOs.Task;
 using TaskManagementSystem.Application.Interfaces;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    [EnableRateLimiting("fixed")]
     [ApiController]
     [Route("api/tasks")]
     [Authorize] 

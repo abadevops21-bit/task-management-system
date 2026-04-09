@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 using TaskManagementSystem.API.Middleware;
 using TaskManagementSystem.Application.Common.Mappings;
 using TaskManagementSystem.Application.Interfaces;
@@ -15,7 +16,7 @@ using TaskManagementSystem.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+#region Serilog Configuration
 //Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -30,6 +31,9 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+#endregion
+
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers()
@@ -40,8 +44,11 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -61,14 +68,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+#region AutoMapper Configuration
 builder.Services.AddRateLimiter(options =>
 {
+    // Global policy
     options.AddFixedWindowLimiter("fixed", opt =>
     {
-        opt.PermitLimit = 5;
-        opt.Window = TimeSpan.FromSeconds(10);
+        opt.PermitLimit = 10; // max requests
+        opt.Window = TimeSpan.FromSeconds(10); // per 10 seconds
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 2;
     });
+
+    options.RejectionStatusCode = 429; // Too Many Requests
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+
+        await context.HttpContext.Response.WriteAsync(
+            "{\"message\": \"Too many requests. Please try again later.\"}",
+            cancellationToken: token
+        );
+    };
 });
+#endregion
 
 builder.Services.AddAuthorization();
 
