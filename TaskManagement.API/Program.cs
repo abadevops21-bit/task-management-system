@@ -34,7 +34,15 @@ builder.Host.UseSerilog();
 #endregion
 
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<IMapper>(sp =>
+{
+    var config = new MapperConfiguration(cfg =>
+    {
+        cfg.AddProfile<MappingProfile>();
+    });
+
+    return config.CreateMapper();
+});
 
 builder.Services.AddControllers()
     .AddFluentValidation(fv =>
