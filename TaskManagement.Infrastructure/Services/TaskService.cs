@@ -41,7 +41,8 @@ namespace TaskManagementSystem.Infrastructure.Services
 
         public async Task<List<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted)
         {
-            var query = _context.Tasks.Where(t => t.UserId == userId);
+            //AsNoTracking Improves performance for read-only queries
+            var query = _context.Tasks.AsNoTracking().Where(t => t.UserId == userId);
 
             if (isCompleted.HasValue)
                 query = query.Where(t => t.IsCompleted == isCompleted.Value);
