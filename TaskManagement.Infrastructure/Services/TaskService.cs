@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaskManagementSystem.Application.DTOs.Common;
@@ -40,7 +40,7 @@ namespace TaskManagementSystem.Infrastructure.Services
             return _mapper.Map<TaskResponseDto>(task);
         }
 
-        public async Task<PagedResponse<TaskResponseDto>> GetTasksAsync(Guid userId,bool? isCompleted,PaginationParams pagination)
+        public async Task<PagedResponse<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted, PaginationParams pagination)
         {
             var query = _context.Tasks
                 .AsNoTracking()
