@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TaskManagementSystem.Application.DTOs.Common;
 using TaskManagementSystem.Application.DTOs.Task;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
@@ -39,17 +40,30 @@ namespace TaskManagementSystem.Infrastructure.Services
             return _mapper.Map<TaskResponseDto>(task);
         }
 
-        public async Task<List<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted)
+        public async Task<PagedResponse<TaskResponseDto>> GetTasksAsync(Guid userId,bool? isCompleted,PaginationParams pagination)
         {
-            //AsNoTracking Improves performance for read-only queries
-            var query = _context.Tasks.AsNoTracking().Where(t => t.UserId == userId);
+            var query = _context.Tasks
+                .AsNoTracking()
+                .Where(t => t.UserId == userId);
 
             if (isCompleted.HasValue)
                 query = query.Where(t => t.IsCompleted == isCompleted.Value);
 
-            return await query
-                .Select(t => _mapper.Map<TaskResponseDto>(t))
+            var totalCount = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(t => t.CreatedAt)
+                .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
                 .ToListAsync();
+
+            return new PagedResponse<TaskResponseDto>
+            {
+                Data = _mapper.Map<List<TaskResponseDto>>(data),
+                TotalCount = totalCount,
+                PageNumber = pagination.PageNumber,
+                PageSize = pagination.PageSize
+            };
         }
 
         public async Task<TaskResponseDto> UpdateTaskAsync(Guid userId, Guid taskId, UpdateTaskDto dto)

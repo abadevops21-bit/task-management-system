@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
+using TaskManagementSystem.Application.DTOs.Common;
 using TaskManagementSystem.Application.DTOs.Task;
 using TaskManagementSystem.Application.Interfaces;
 
@@ -33,9 +34,9 @@ namespace TaskManagementSystem.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] bool? isCompleted)
+        public async Task<IActionResult> Get([FromQuery] bool? isCompleted,[FromQuery] PaginationParams pagination)
         {
-            var result = await _taskService.GetTasksAsync(GetUserId(), isCompleted);
+            var result = await _taskService.GetTasksAsync(GetUserId(),isCompleted,pagination);
             return Ok(result);
         }
 

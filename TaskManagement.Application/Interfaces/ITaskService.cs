@@ -1,11 +1,12 @@
-﻿using TaskManagementSystem.Application.DTOs.Task;
+﻿using TaskManagementSystem.Application.DTOs.Common;
+using TaskManagementSystem.Application.DTOs.Task;
 
 namespace TaskManagementSystem.Application.Interfaces
 {
     public interface ITaskService
     {
         Task<TaskResponseDto> CreateTaskAsync(Guid userId, CreateTaskDto dto);
-        Task<List<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted);
+        Task<PagedResponse<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted,PaginationParams pagination);
         Task<TaskResponseDto> UpdateTaskAsync(Guid userId, Guid taskId, UpdateTaskDto dto);
         Task<bool> DeleteTaskAsync(Guid userId, Guid taskId);
     }
