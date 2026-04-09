@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TaskManagementSystem.Application.DTOs.Task;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
@@ -9,12 +11,15 @@ namespace TaskManagementSystem.Infrastructure.Services
     public class TaskService : ITaskService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly ILogger<TaskService> _logger;
 
-        public TaskService(ApplicationDbContext context)
+        public TaskService(ApplicationDbContext context, IMapper mapper, ILogger<TaskService> logger)
         {
             _context = context;
+            _mapper = mapper;
+            _logger = logger;
         }
-
         public async Task<TaskResponseDto> CreateTaskAsync(Guid userId, CreateTaskDto dto)
         {
             var task = new TodoTask
@@ -30,14 +35,8 @@ namespace TaskManagementSystem.Infrastructure.Services
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return new TaskResponseDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                IsCompleted = task.IsCompleted,
-                CreatedAt = task.CreatedAt
-            };
+            _logger.LogInformation("Creating task for user {UserId}", userId);
+            return _mapper.Map<TaskResponseDto>(task);
         }
 
         public async Task<List<TaskResponseDto>> GetTasksAsync(Guid userId, bool? isCompleted)
@@ -48,14 +47,7 @@ namespace TaskManagementSystem.Infrastructure.Services
                 query = query.Where(t => t.IsCompleted == isCompleted.Value);
 
             return await query
-                .Select(t => new TaskResponseDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    IsCompleted = t.IsCompleted,
-                    CreatedAt = t.CreatedAt
-                })
+                .Select(t => _mapper.Map<TaskResponseDto>(t))
                 .ToListAsync();
         }
 
@@ -73,14 +65,7 @@ namespace TaskManagementSystem.Infrastructure.Services
 
             await _context.SaveChangesAsync();
 
-            return new TaskResponseDto
-            {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                IsCompleted = task.IsCompleted,
-                CreatedAt = task.CreatedAt
-            };
+            return _mapper.Map<TaskResponseDto>(task);
         }
 
         public async Task<bool> DeleteTaskAsync(Guid userId, Guid taskId)
