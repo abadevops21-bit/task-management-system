@@ -1,1 +1,52 @@
-<p>login works!</p>
+<div class="login-shell">
+  <div class="login-panel">
+    <div class="login-brand">
+      <div class="brand-badge">TASK</div>
+      <h1>Sign in</h1>
+      <p>Access your task workspace securely.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="field-row">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          [class.invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+        />
+        <div class="field-error" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+          Please enter a valid email address.
+        </div>
+      </div>
+
+      <div class="field-row">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          [class.invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+        />
+        <div class="field-error" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+          Password is required.
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button" [disabled]="loading || loginForm.invalid">
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading">Signing in...</span>
+      </button>
+
+      <div class="alert alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <p class="footer-note">
+      New here? <a href="#">Create an account</a>
+    </p>
+  </div>
+</div>
