@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TaskService } from '@core/services/task.service';
 import { Task, TaskListResponse } from '@models/task.model';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -14,18 +15,20 @@ import { FormsModule } from '@angular/forms';
 export class TaskList implements OnInit {
 
   private taskService = inject(TaskService);
+  private router = inject(Router);
 
   // Make Math available in template
   Math = Math;
 
-  tasks: Task[] = [];
-  loading = false;
-  errorMessage = '';
+
+  tasks = signal<Task[]>([]);
+  loading = signal(false);
+  errorMessage = signal('');
+  totalCount = signal(0);
 
   // pagination
   pageNumber = 1;
   pageSize = 5;
-  totalCount = 0;
 
   // filter
   isCompleted: boolean | null = null;
@@ -35,8 +38,8 @@ export class TaskList implements OnInit {
   }
 
   loadTasks() {
-    this.loading = true;
-    this.errorMessage = '';
+    this.loading.set(true);
+    this.errorMessage.set('');
 
     const params: {
       pageNumber?: number;
@@ -53,13 +56,18 @@ export class TaskList implements OnInit {
 
     this.taskService.getTasks(params).subscribe({
       next: (res: TaskListResponse) => {
-        this.tasks = res.data;
-        this.totalCount = res.totalCount;
-        this.loading = false;
+        console.log('RESPONSE:', res);
+
+        const data = res.data ?? (res as any).Data ?? [];
+
+        this.tasks.set([...data]);   // 🔥 important
+        this.totalCount.set(res.totalCount ?? (res as any).TotalCount ?? 0);
+
+        this.loading.set(false);
       },
       error: (err: any) => {
-        this.errorMessage = err.error?.message || 'Failed to load tasks';
-        this.loading = false;
+        this.errorMessage.set(err.error?.message || 'Failed to load tasks');
+        this.loading.set(false);
         console.error('Error loading tasks:', err);
       }
     });
@@ -75,7 +83,7 @@ export class TaskList implements OnInit {
   }
 
   nextPage() {
-    const maxPage = Math.ceil(this.totalCount / this.pageSize);
+    const maxPage = Math.ceil(this.totalCount() / this.pageSize);
     if (this.pageNumber < maxPage) {
       this.pageNumber++;
       this.loadTasks();
@@ -101,5 +109,9 @@ export class TaskList implements OnInit {
         console.error('Error deleting task:', err);
       }
     });
+  }
+
+  goToCreateTask() {
+    this.router.navigate(['/tasks/create']);
   }
 }

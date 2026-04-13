@@ -1,0 +1,63 @@
+.task-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+input, textarea {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(15, 23, 42, 0.85);
+  color: white;
+}
+
+textarea {
+  min-height: 100px;
+  resize: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.create-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: transparent;
+  color: #cbd5e1;
+  padding: 12px 20px;
+  border-radius: 12px;
+}
+
+.error {
+  color: #f87171;
+  font-size: 12px;
+}
+
+.error-alert {
+  background: rgba(239, 68, 68, 0.1);
+  padding: 12px;
+  border-radius: 10px;
+  color: #fca5a5;
+}

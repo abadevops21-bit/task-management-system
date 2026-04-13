@@ -1,1 +1,49 @@
-<p>task-form works!</p>
+<div class="task-shell">
+    <div class="task-panel">
+
+        <div class="task-header">
+            <div class="brand-badge">TASK</div>
+            <h1>Create Task</h1>
+            <p>Add a new task to your workflow</p>
+        </div>
+
+        <form class="task-form" [formGroup]="form" (ngSubmit)="submit()">
+
+            <!-- Title -->
+            <div class="form-group">
+                <label>Title</label>
+                <input formControlName="title" placeholder="Enter task title" />
+
+                @if (form.controls.title.touched && form.controls.title.invalid) {
+                <small class="error">Title is required</small>
+                }
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label>Description</label>
+                <textarea formControlName="description" placeholder="Optional description"></textarea>
+            </div>
+
+            <!-- Error -->
+            @if (errorMessage()) {
+            <div class="error-alert">
+                {{ errorMessage() }}
+            </div>
+            }
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" (click)="goBack()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="create-btn" [disabled]="loading() || form.invalid">
+                    {{ loading() ? 'Creating...' : 'Create Task' }}
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>

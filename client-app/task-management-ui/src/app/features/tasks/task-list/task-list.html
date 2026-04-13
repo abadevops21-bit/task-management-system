@@ -1,104 +1,134 @@
 <div class="task-shell">
-  <div class="task-panel">
-    <div class="task-header">
-      <div class="brand-badge">TASK</div>
-      <h1>Task Dashboard</h1>
-      <p>Manage your tasks efficiently and stay organized.</p>
-    </div>
+    <div class="task-panel">
+        <div class="task-header">
 
-    <!-- Filter Controls -->
-    <div class="filter-section">
-      <div class="filter-buttons">
-        <button
-          class="filter-btn"
-          [class.active]="isCompleted === null"
-          (click)="changeFilter('all')">
-          All Tasks
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="isCompleted === false"
-          (click)="changeFilter('pending')">
-          Pending
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="isCompleted === true"
-          (click)="changeFilter('completed')">
-          Completed
-        </button>
-      </div>
-    </div>
+            <!-- TOP ROW -->
+            <div class="header-top">
+                <div class="brand-badge">TASK</div>
 
-    <!-- Loading State -->
-    <div class="loading-state" *ngIf="loading">
-      <div class="loading-spinner"></div>
-      <p>Loading tasks...</p>
-    </div>
-
-    <!-- Error Message -->
-    <div class="error-alert" *ngIf="errorMessage && !loading">
-      <div class="alert-icon">⚠️</div>
-      <p>{{ errorMessage }}</p>
-      <button class="retry-btn" (click)="loadTasks()">Retry</button>
-    </div>
-
-    <!-- Tasks List -->
-    <div class="tasks-container" *ngIf="!loading">
-      <div class="tasks-list" *ngIf="tasks.length > 0; else noTasks">
-        <div class="task-item" *ngFor="let task of tasks">
-          <div class="task-content">
-            <div class="task-header-row">
-              <h3 class="task-title">{{ task.title }}</h3>
-              <span class="task-status" [class.completed]="task.isCompleted" [class.pending]="!task.isCompleted">
-                {{ task.isCompleted ? '✓ Completed' : '○ Pending' }}
-              </span>
+                <button class="create-task-btn" (click)="goToCreateTask()">
+                    + Create Task
+                </button>
             </div>
-            <p class="task-description" *ngIf="task.description">{{ task.description }}</p>
-            <div class="task-meta">
-              <small class="task-date">Created: {{ task.createdAt | date:'short' }}</small>
+
+            <!-- TITLE -->
+            <h1>Task Dashboard</h1>
+            <p>Manage your tasks efficiently and stay organized.</p>
+
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn" [class.active]="isCompleted === null" (click)="changeFilter('all')">
+                    All Tasks
+                </button>
+                <button class="filter-btn" [class.active]="isCompleted === false" (click)="changeFilter('pending')">
+                    Pending
+                </button>
+                <button class="filter-btn" [class.active]="isCompleted === true" (click)="changeFilter('completed')">
+                    Completed
+                </button>
             </div>
-          </div>
-          <div class="task-actions">
-            <button class="action-btn delete-btn" (click)="deleteTask(task.id)" title="Delete task">
-              🗑️
-            </button>
-          </div>
         </div>
-      </div>
 
-      <ng-template #noTasks>
-        <div class="empty-state">
-          <div class="empty-icon">📋</div>
-          <h3>No tasks found</h3>
-          <p *ngIf="isCompleted === null">Create your first task to get started!</p>
-          <p *ngIf="isCompleted === true">No completed tasks yet. Keep working!</p>
-          <p *ngIf="isCompleted === false">All caught up! No pending tasks.</p>
+        <!-- Loading -->
+        @if (loading()) {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading tasks...</p>
         </div>
-      </ng-template>
+        }
+
+        <!-- Error -->
+        @if (errorMessage() && !loading) {
+        <div class="error-alert">
+            <div class="alert-icon">⚠️</div>
+            <p>{{ errorMessage() }}</p>
+            <button class="retry-btn" (click)="loadTasks()">Retry</button>
+        </div>
+        }
+
+        <!-- Tasks -->
+        @if (!loading()) {
+        <div class="tasks-container">
+
+            @if (tasks().length > 0) {
+
+            <div class="tasks-list">
+                @for (task of tasks(); track $index) {
+                <div class="task-item">
+                    <div class="task-content">
+                        <div class="task-header-row">
+                            <h3 class="task-title">{{ task.title }}</h3>
+
+                            <span class="task-status" [class.completed]="task.isCompleted"
+                                [class.pending]="!task.isCompleted">
+                                {{ task.isCompleted ? '✓ Completed' : '○ Pending' }}
+                            </span>
+                        </div>
+
+                        @if (task.description) {
+                        <p class="task-description">{{ task.description }}</p>
+                        }
+
+                        <div class="task-meta">
+                            <small class="task-date">
+                                Created: {{ task.createdAt ? (task.createdAt | date:'short') : '-' }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="task-actions">
+                        <button class="action-btn delete-btn" (click)="deleteTask(task.id)" title="Delete task">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+
+            } @else {
+
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <h3>No tasks found</h3>
+
+                @if (isCompleted === null) {
+                <p>Create your first task to get started!</p>
+                }
+                @if (isCompleted === true) {
+                <p>No completed tasks yet. Keep working!</p>
+                }
+                @if (isCompleted === false) {
+                <p>All caught up! No pending tasks.</p>
+                }
+            </div>
+
+            }
+
+        </div>
+        }
+
+        <!-- Pagination -->
+        @if (tasks.length > 0 && !loading) {
+        <div class="pagination-section">
+            <div class="pagination-controls">
+                <button class="pagination-btn" [disabled]="pageNumber <= 1" (click)="prevPage()">
+                    ← Previous
+                </button>
+
+                <span class="page-info">
+                    Page {{ pageNumber }} of {{ Math.ceil(totalCount() / pageSize) || 1 }}
+                </span>
+
+                <button class="pagination-btn" [disabled]="pageNumber >= Math.ceil(totalCount() / pageSize)"
+                    (click)="nextPage()">
+                    Next →
+                </button>
+            </div>
+        </div>
+        }
+
     </div>
-
-    <!-- Pagination -->
-    <div class="pagination-section" *ngIf="tasks.length > 0 && !loading">
-      <div class="pagination-controls">
-        <button
-          class="pagination-btn"
-          [disabled]="pageNumber <= 1"
-          (click)="prevPage()">
-          ← Previous
-        </button>
-
-        <span class="page-info">
-          Page {{ pageNumber }} of {{ Math.ceil(totalCount / pageSize) || 1 }}
-        </span>
-
-        <button
-          class="pagination-btn"
-          [disabled]="pageNumber >= Math.ceil(totalCount / pageSize)"
-          (click)="nextPage()">
-          Next →
-        </button>
-      </div>
-    </div>
-  </div>
 </div>

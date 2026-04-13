@@ -8,7 +8,7 @@ import { UserRegistration, UserLogin } from '../../models/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth'; // Adjust based on your backend
+  private apiUrl = 'http://localhost:5170/api/auth'; // Adjust based on your backend
 
   constructor(private http: HttpClient) {}
 
@@ -20,21 +20,29 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
+  private getStorage(): Storage | null {
+    return typeof window !== 'undefined' && window.localStorage ? window.localStorage : null;
+  }
+
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    const storage = this.getStorage();
+    storage?.removeItem('token');
+    storage?.removeItem('role');
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    const storage = this.getStorage();
+    return !!storage?.getItem('token');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const storage = this.getStorage();
+    return storage?.getItem('token') ?? null;
   }
 
   setSession(res: LoginResponse): void {
-    localStorage.setItem('token', res.token);
-    localStorage.setItem('role', res.role);
+    const storage = this.getStorage();
+    storage?.setItem('token', res.token);
+    storage?.setItem('role', res.role);
   }
 }

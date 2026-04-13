@@ -17,6 +17,11 @@ export const routes: Routes = [
       import('./features/tasks/task-list/task-list').then(m => m.TaskList)
   },
   {
+    path: 'tasks/create',   
+    loadComponent: () =>
+      import('./features/tasks/task-form/task-form').then(m => m.TaskForm)
+  },
+  {
     path: '',
     redirectTo: 'auth/login',
     pathMatch: 'full'
