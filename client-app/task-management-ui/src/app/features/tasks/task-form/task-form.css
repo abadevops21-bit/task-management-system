@@ -61,3 +61,10 @@ textarea {
   border-radius: 10px;
   color: #fca5a5;
 }
+
+.task-panel {
+  max-width: 760px;     /* keeps form from becoming too wide */
+  margin: 0 auto;       /* center on page */
+  padding: 32px;
+}
+
