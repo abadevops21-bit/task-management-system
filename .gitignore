@@ -13,3 +13,12 @@
 /TaskManagement.Infrastructure/obj
 /TaskManagement.Persistence/obj
 /TaskManagement.API/logs
+/src/TaskManagement.API/bin/Debug/net10.0
+/src/TaskManagement.API/logs
+/src/TaskManagement.API/obj
+/src/TaskManagement.Application/bin/Debug/net10.0
+/src/TaskManagement.Application/obj
+/src/TaskManagement.Domain/bin/Debug/net10.0
+/src/TaskManagement.Domain/obj
+/src/TaskManagement.Infrastructure/bin/Debug/net10.0
+/src/TaskManagement.Infrastructure/obj

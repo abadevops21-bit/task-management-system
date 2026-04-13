@@ -1,9 +1,0 @@
-$kind: http-request
-name: Get All Tasks
-url: "{{BaseURL}}/api/tasks"
-method: GET
-auth:
-  type: bearer
-  credentials:
-    token: "{{Token}}"
-order: 6000

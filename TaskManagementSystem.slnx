@@ -1,8 +1,9 @@
 <Solution>
+  <Folder Name="/client-app/" />
   <Folder Name="/src/">
-    <Project Path="TaskManagement.API/TaskManagement.API.csproj" Id="cbcef2b3-5e8e-4953-b5b9-c8ce033928d4" />
-    <Project Path="TaskManagement.Application/TaskManagement.Application.csproj" Id="f5fc5426-a79f-4c01-9dd9-da4611ee0bdd" />
-    <Project Path="TaskManagement.Domain/TaskManagement.Domain.csproj" Id="add3dd53-0496-4d47-ad31-7c761eacd2ce" />
-    <Project Path="TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj" Id="7f5b3594-95e2-4d5d-a60c-11b0a4daa8ec" />
+    <Project Path="src/TaskManagement.API/TaskManagement.API.csproj" />
+    <Project Path="src/TaskManagement.Application/TaskManagement.Application.csproj" />
+    <Project Path="src/TaskManagement.Domain/TaskManagement.Domain.csproj" />
+    <Project Path="src/TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj" />
   </Folder>
 </Solution>
