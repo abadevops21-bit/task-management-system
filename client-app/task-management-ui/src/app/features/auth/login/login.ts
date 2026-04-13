@@ -1,14 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { LoginResponse } from '@models/auth.model';
+import { UserLogin } from '@models/user.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -34,7 +36,7 @@ export class Login {
     this.loading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.loginForm.value as { email: string; password: string }).subscribe({
+    this.authService.login(this.loginForm.value as UserLogin).subscribe({
       next: (res: LoginResponse) => {
         this.authService.setSession(res);
         if (res.role === 'Admin' || res.role === 'SuperUser') {
