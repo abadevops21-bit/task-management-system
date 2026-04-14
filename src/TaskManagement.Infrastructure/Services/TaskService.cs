@@ -80,6 +80,17 @@ namespace TaskManagementSystem.Infrastructure.Services
             };
         }
 
+        public async Task<TaskResponseDto> GetTasksAsync(Guid userId, Guid taskId)
+        {
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+
+            if (task == null)
+                throw new Exception("Task not found");
+
+            return _mapper.Map<TaskResponseDto>(task);
+        }
+
         public async Task<TaskResponseDto> UpdateTaskAsync(Guid userId, Guid taskId, UpdateTaskDto dto)
         {
             var task = await _context.Tasks
@@ -109,6 +120,21 @@ namespace TaskManagementSystem.Infrastructure.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<TaskResponseDto> ToggleTaskStatusAsync(Guid userId, Guid taskId)
+        {
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == userId);
+
+            if (task == null)
+                throw new Exception("Task not found");
+
+            task.IsCompleted = !task.IsCompleted;
+
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<TaskResponseDto>(task);
         }
     }
 }

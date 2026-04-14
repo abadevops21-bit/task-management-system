@@ -114,4 +114,17 @@ export class TaskList implements OnInit {
   goToCreateTask() {
     this.router.navigate(['/tasks/create']);
   }
+
+  toggleStatus(task: Task) {
+    this.taskService.toggleTaskCompletion(task.id).subscribe({
+      next: () => this.loadTasks(),
+      error: (err) => {
+        this.errorMessage.set(err.error?.message || 'Failed to update status');
+      }
+    });
+  }
+
+  editTask(id: number) {
+    this.router.navigate(['/tasks/edit', id]);
+  }
 }

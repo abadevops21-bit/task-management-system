@@ -3,8 +3,13 @@
 
         <div class="task-header">
             <div class="brand-badge">TASK</div>
-            <h1>Create Task</h1>
-            <p>Add a new task to your workflow</p>
+            <h1>
+                {{ isEditMode() ? 'Edit Task' : 'Create Task' }}
+            </h1>
+
+            <p>
+                {{ isEditMode() ? 'Update your task details' : 'Add a new task to your workflow' }}
+            </p>
         </div>
 
         <form class="task-form" [formGroup]="form" (ngSubmit)="submit()">
@@ -25,6 +30,26 @@
                 <textarea formControlName="description" placeholder="Optional description"></textarea>
             </div>
 
+            @if (isEditMode()) {
+            <div class="form-group status-group">
+
+                <label>Status</label>
+
+                <div class="status-toggle">
+                    <span [class.active]="!form.controls.isCompleted.value">
+                        Pending
+                    </span>
+
+                    <input type="checkbox" formControlName="isCompleted" />
+
+                    <span [class.active]="form.controls.isCompleted.value">
+                        Completed
+                    </span>
+                </div>
+
+            </div>
+            }
+
             <!-- Error -->
             @if (errorMessage()) {
             <div class="error-alert">
@@ -39,7 +64,12 @@
                 </button>
 
                 <button type="submit" class="create-btn" [disabled]="loading() || form.invalid">
-                    {{ loading() ? 'Creating...' : 'Create Task' }}
+
+                    {{ loading()
+                    ? (isEditMode() ? 'Updating...' : 'Creating...')
+                    : (isEditMode() ? 'Update Task' : 'Create Task')
+                    }}
+
                 </button>
             </div>
 

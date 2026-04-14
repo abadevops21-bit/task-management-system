@@ -47,7 +47,7 @@ export class TaskService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  toggleTaskCompletion(id: number): Observable<Task> {
+  toggleTaskCompletion(id: any): Observable<Task> {
     return this.http.patch<Task>(`${this.apiUrl}/${id}/toggle`, {});
   }
 }

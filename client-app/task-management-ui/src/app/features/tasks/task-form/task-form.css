@@ -68,3 +68,29 @@ textarea {
   padding: 32px;
 }
 
+.status-group {
+  margin-top: 12px;
+}
+
+.status-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-toggle span {
+  font-size: 14px;
+  color: #94a3b8;
+  transition: 0.2s;
+}
+
+.status-toggle span.active {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.status-toggle input {
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+}

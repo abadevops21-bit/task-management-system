@@ -38,6 +38,14 @@ namespace TaskManagementSystem.API.Controllers
             return Ok(result);
         }
 
+        // GET by id
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _taskService.GetTasksAsync(GetUserId(), id);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] bool? isCompleted,[FromQuery] PaginationParams pagination)
         {
@@ -49,6 +57,13 @@ namespace TaskManagementSystem.API.Controllers
         public async Task<IActionResult> Update(Guid id, UpdateTaskDto dto)
         {
             var result = await _taskService.UpdateTaskAsync(GetUserId(), id, dto);
+            return Ok(result);
+        }
+
+        [HttpPatch("{id}/toggle")]
+        public async Task<IActionResult> ToggleStatus(Guid id)
+        {
+            var result = await _taskService.ToggleTaskStatusAsync(GetUserId(), id);
             return Ok(result);
         }
 

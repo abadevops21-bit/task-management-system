@@ -80,9 +80,25 @@
                     </div>
 
                     <div class="task-actions">
-                        <button class="action-btn delete-btn" (click)="deleteTask(task.id)" title="Delete task">
+
+                        <!-- Toggle Status -->
+                        <button class="action-btn status-toggle" [class.completed]="task.isCompleted"
+                            (click)="toggleStatus(task)">
+
+                            {{ task.isCompleted ? '↩ Undo' : '✔ Done' }}
+
+                        </button>
+
+                        <!-- Edit -->
+                        <button class="action-btn edit-btn" (click)="editTask(task.id)">
+                            ✏️
+                        </button>
+
+                        <!-- Delete -->
+                        <button class="action-btn delete-btn" (click)="deleteTask(task.id)">
                             🗑️
                         </button>
+
                     </div>
                 </div>
                 }

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { signal } from '@angular/core';
 import { TaskService } from '@core/services/task.service';
@@ -14,6 +14,11 @@ import { TaskService } from '@core/services/task.service';
 })
 export class TaskForm {
 
+  private route = inject(ActivatedRoute);
+
+  taskId: any | null = null;
+  isEditMode = signal(false);
+
   private fb = inject(FormBuilder);
   private taskService = inject(TaskService);
   private router = inject(Router);
@@ -23,8 +28,29 @@ export class TaskForm {
 
   form = this.fb.nonNullable.group({
     title: ['', [Validators.required]],
-    description: ['']
+    description: [''],
+    isCompleted: false 
   });
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.taskId = id;
+      this.isEditMode.set(true);
+      this.loadTask();
+    }
+  }
+
+  loadTask() {
+    this.taskService.getTask(this.taskId!).subscribe(task => {
+      this.form.patchValue({
+        title: task.title,
+        description: task.description,
+        isCompleted: task.isCompleted 
+      });
+    });
+  }
 
   goBack() {
     this.router.navigate(['/tasks']);
@@ -34,15 +60,20 @@ export class TaskForm {
 
     this.loading.set(true);
 
-    this.taskService.createTask(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.router.navigate(['/tasks']);
-      },
-      error: (err) => {
-        this.errorMessage.set(err.error?.message || 'Failed to create task');
-        this.loading.set(false);
-      }
-    });
+    const request = this.form.getRawValue();
+
+    if (this.isEditMode()) {
+      // UPDATE
+      this.taskService.updateTask(this.taskId!, request).subscribe({
+        next: () => this.goBack(),
+        error: () => this.loading.set(false)
+      });
+    } else {
+      // CREATE
+      this.taskService.createTask(request).subscribe({
+        next: () => this.goBack(),
+        error: () => this.loading.set(false)
+      });
+    }
   }
 }
