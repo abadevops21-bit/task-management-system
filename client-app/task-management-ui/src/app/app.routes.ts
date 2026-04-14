@@ -24,7 +24,8 @@ export const routes: Routes = [
   {
   path: 'tasks/edit/:id',
   loadComponent: () =>
-    import('./features/tasks/task-form/task-form').then(m => m.TaskForm)
+    import('./features/tasks/task-form/task-form').then(m => m.TaskForm),
+  data: { renderMode: 'client' } 
 },
   {
     path: '',

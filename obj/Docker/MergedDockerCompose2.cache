@@ -44,7 +44,7 @@ services:
       labels:
         com.microsoft.created-by: visual-studio
         com.microsoft.visual-studio.project-name: TaskManagement.API
-      target: base
+      target: build
     container_name: task_api
     depends_on:
       sqlserver:

@@ -1,11 +1,11 @@
 services:
   taskmanagement.api:
-    image: taskmanagementapi:dev
+    image: abadevops21/taskmanagement-api:dev
     build:
       args:
         LAUNCHING_FROM_VS: true
         BUILD_CONFIGURATION: Debug
-      target: base
+      target: build
       labels:
         com.microsoft.created-by: "visual-studio"
         com.microsoft.visual-studio.project-name: "TaskManagement.API"

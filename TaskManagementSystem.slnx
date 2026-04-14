@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/client-app/" />
+  <Folder Name="/k8s/" />
   <Folder Name="/src/">
     <Project Path="src/TaskManagement.API/TaskManagement.API.csproj" />
     <Project Path="src/TaskManagement.Application/TaskManagement.Application.csproj" />

@@ -1,7 +1,6 @@
-version: '3.9'
+﻿services:
 
-services:
-
+  # 🛢️ SQL SERVER
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: task_sql
@@ -13,25 +12,30 @@ services:
     volumes:
       - sql_data:/var/opt/mssql
 
-  api:
+  # .NET API
+  taskmanagement.api:
     build:
-      context: ./src/TaskManagement.API
-      dockerfile: Dockerfile
+      context: .   
+      dockerfile: src/TaskManagement.API/Dockerfile
+    image: abadevops21/taskmanagement-api:latest
     container_name: task_api
     depends_on:
       - sqlserver
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=TaskDb;User=sa;Password=YourStrong@Pass123;TrustServerCertificate=True;
     ports:
       - "5000:80"
 
+  # ANGULAR CLIENT
   client:
     build:
       context: ./client-app/task-management-ui
       dockerfile: Dockerfile
+    image: abadevops21/taskmanagement-client:latest
     container_name: task_client
     depends_on:
-      - api
+      - taskmanagement.api
     ports:
       - "4200:80"
 

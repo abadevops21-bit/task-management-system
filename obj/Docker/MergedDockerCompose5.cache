@@ -36,8 +36,8 @@ services:
         volume: {}
   taskmanagement.api:
     build:
-      context: D:\task-management-system\src\TaskManagement.API
-      dockerfile: Dockerfile
+      context: D:\task-management-system
+      dockerfile: src/TaskManagement.API/Dockerfile
     container_name: task_api
     depends_on:
       sqlserver:

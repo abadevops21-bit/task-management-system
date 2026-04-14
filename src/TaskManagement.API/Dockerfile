@@ -1,33 +1,28 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-
-# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/TaskManagement.API/TaskManagement.API.csproj", "src/TaskManagement.API/"]
-COPY ["src/TaskManagement.Application/TaskManagement.Application.csproj", "src/TaskManagement.Application/"]
-COPY ["src/TaskManagement.Domain/TaskManagement.Domain.csproj", "src/TaskManagement.Domain/"]
-COPY ["src/TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj", "src/TaskManagement.Infrastructure/"]
-RUN dotnet restore "./src/TaskManagement.API/TaskManagement.API.csproj"
+
+# Copy project files
+COPY src/TaskManagement.API/TaskManagement.API.csproj src/TaskManagement.API/
+COPY src/TaskManagement.Application/TaskManagement.Application.csproj src/TaskManagement.Application/
+COPY src/TaskManagement.Domain/TaskManagement.Domain.csproj src/TaskManagement.Domain/
+COPY src/TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj src/TaskManagement.Infrastructure/
+
+# Restore
+RUN dotnet restore src/TaskManagement.API/TaskManagement.API.csproj
+
+# Copy full source
 COPY . .
-WORKDIR "/src/src/TaskManagement.API"
-RUN dotnet build "./TaskManagement.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./TaskManagement.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Build
+WORKDIR /src/src/TaskManagement.API
+RUN dotnet publish -c Release -o /app/publish
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
+# Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+COPY --from=build /app/publish .
+
+EXPOSE 80
+
 ENTRYPOINT ["dotnet", "TaskManagement.API.dll"]

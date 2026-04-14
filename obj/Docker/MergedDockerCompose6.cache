@@ -36,15 +36,15 @@ services:
         volume: {}
   taskmanagement.api:
     build:
-      context: D:\task-management-system\src\TaskManagement.API
-      dockerfile: Dockerfile
+      context: D:\task-management-system
+      dockerfile: src/TaskManagement.API/Dockerfile
       args:
         BUILD_CONFIGURATION: Debug
         LAUNCHING_FROM_VS: "true"
       labels:
         com.microsoft.created-by: visual-studio
         com.microsoft.visual-studio.project-name: TaskManagement.API
-      target: base
+      target: build
     container_name: task_api
     depends_on:
       sqlserver:
@@ -115,7 +115,7 @@ services:
         bind:
           create_host_path: true
       - type: bind
-        source: D:\task-management-system\src\TaskManagement.API
+        source: D:\task-management-system
         target: /src
         bind:
           create_host_path: true

@@ -9,6 +9,7 @@ services:
       taskmanagement.api:
         condition: service_started
         required: true
+    image: abadevops21/taskmanagement-client:latest
     networks:
       default: null
     ports:
@@ -36,15 +37,15 @@ services:
         volume: {}
   taskmanagement.api:
     build:
-      context: D:\task-management-system\src\TaskManagement.API
-      dockerfile: Dockerfile
+      context: D:\task-management-system
+      dockerfile: src/TaskManagement.API/Dockerfile
       args:
         BUILD_CONFIGURATION: Debug
         LAUNCHING_FROM_VS: "true"
       labels:
         com.microsoft.created-by: visual-studio
         com.microsoft.visual-studio.project-name: TaskManagement.API
-      target: base
+      target: build
     container_name: task_api
     depends_on:
       sqlserver:
@@ -64,7 +65,7 @@ services:
       ConnectionStrings__DefaultConnection: Server=sqlserver;Database=TaskDb;User=sa;Password=YourStrong@Pass123;TrustServerCertificate=True;
       DOTNET_USE_POLLING_FILE_WATCHER: "1"
       NUGET_FALLBACK_PACKAGES: /.nuget/fallbackpackages
-    image: taskmanagementapi:dev
+    image: abadevops21/taskmanagement-api:dev
     labels:
       com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /.nuget/packages --additionalProbingPath /.nuget/fallbackpackages  "/app/bin/Debug/net10.0/TaskManagement.API.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: dotnet --roll-forward Major /VSTools/DistrolessHelper/DistrolessHelper.dll --stop dotnet
@@ -115,7 +116,7 @@ services:
         bind:
           create_host_path: true
       - type: bind
-        source: D:\task-management-system\src\TaskManagement.API
+        source: D:\task-management-system
         target: /src
         bind:
           create_host_path: true

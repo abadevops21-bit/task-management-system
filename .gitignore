@@ -26,3 +26,5 @@
 /tests/TaskManagement.IntegrationTests/TaskManagement.IntegrationTests/obj
 /tests/TaskManagement.UnitTests/TaskManagement.UnitTests/bin/Debug/net10.0
 /tests/TaskManagement.UnitTests/TaskManagement.UnitTests/obj
+/bin/Debug
+/obj/Debug

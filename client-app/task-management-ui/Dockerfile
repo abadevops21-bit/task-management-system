@@ -1,30 +1,26 @@
-# 🔹 Build stage
-FROM node:24 AS build
+# 🔹 Build Stage
+FROM --platform=linux/amd64 node:20-alpine AS build
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
-RUN npm install
+# ✅ use install (not ci)
+RUN npm install --no-audit --no-fund
 
-# Copy full source
 COPY . .
 
-# Build Angular app
-RUN npm run build -- --configuration production
+# build (SSR already fixed earlier)
+RUN npm run build
 
 
-# 🔹 Production stage (Nginx)
-FROM nginx:alpine
+# 🔹 Production Stage
+FROM --platform=linux/amd64 nginx:alpine
 
-# Remove default nginx files
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built app
 COPY --from=build /app/dist/task-management-ui /usr/share/nginx/html
 
-# Expose port
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

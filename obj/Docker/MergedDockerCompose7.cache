@@ -36,8 +36,8 @@ services:
         volume: {}
   taskmanagement.api:
     build:
-      context: D:\task-management-system\src\TaskManagement.API
-      dockerfile: Dockerfile
+      context: D:\task-management-system
+      dockerfile: src/TaskManagement.API/Dockerfile
     container_name: task_api
     depends_on:
       sqlserver:
@@ -48,6 +48,7 @@ services:
       ASPNETCORE_HTTP_PORTS: "8080"
       ASPNETCORE_HTTPS_PORTS: "8081"
       ConnectionStrings__DefaultConnection: Server=sqlserver;Database=TaskDb;User=sa;Password=YourStrong@Pass123;TrustServerCertificate=True;
+    image: abadevops21/taskmanagement-api:latest
     networks:
       default: null
     ports:
