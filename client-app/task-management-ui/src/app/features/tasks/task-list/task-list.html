@@ -81,21 +81,21 @@
 
                     <div class="task-actions">
 
-                        <!-- Toggle Status -->
-                        <button class="action-btn status-toggle" [class.completed]="task.isCompleted"
-                            (click)="toggleStatus(task)">
+                        <!-- Toggle -->
+                        <button class="icon-btn status-toggle" [class.completed]="task.isCompleted"
+                            (click)="toggleStatus(task)"
+                            title="{{ task.isCompleted ? 'Mark as Pending' : 'Mark as Completed' }}">
 
-                            {{ task.isCompleted ? '↩ Undo' : '✔ Done' }}
-
+                            {{ task.isCompleted ? '↩' : '✔' }}
                         </button>
 
                         <!-- Edit -->
-                        <button class="action-btn edit-btn" (click)="editTask(task.id)">
+                        <button class="icon-btn edit-btn" (click)="editTask(task.id)" title="Edit Task">
                             ✏️
                         </button>
 
                         <!-- Delete -->
-                        <button class="action-btn delete-btn" (click)="deleteTask(task.id)">
+                        <button class="icon-btn delete-btn" (click)="deleteTask(task.id)" title="Delete Task">
                             🗑️
                         </button>
 
@@ -143,6 +143,12 @@
                     Next →
                 </button>
             </div>
+        </div>
+        }
+
+        @if (showToast()) {
+        <div class="toast">
+            {{ toastMessage() }}
         </div>
         }
 

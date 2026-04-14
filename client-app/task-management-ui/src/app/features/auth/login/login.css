@@ -70,18 +70,24 @@
 
 .field-row input {
   width: 100%;
-  padding: 14px 16px;
+  height: 48px;
+
+  padding: 0 16px;        /* remove vertical padding */
+  line-height: 48px;      /* 👈 THIS centers text perfectly */
+
   border-radius: 14px;
   border: 1px solid rgba(148, 163, 184, 0.15);
   background: rgba(15, 23, 42, 0.85);
   color: #f8fafc;
   font-size: 15px;
+
   transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .field-row input::placeholder {
   color: #94a3b8;
 }
+
 
 .field-row input:focus {
   outline: none;
@@ -159,4 +165,9 @@
   .login-brand h1 {
     font-size: 26px;
   }
+}
+
+.field-row input::placeholder {
+  color: #94a3b8;
+  line-height: normal;
 }

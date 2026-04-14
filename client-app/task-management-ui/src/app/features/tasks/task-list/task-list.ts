@@ -20,6 +20,8 @@ export class TaskList implements OnInit {
   // Make Math available in template
   Math = Math;
 
+  toastMessage = signal('');
+  showToast = signal(false);
 
   tasks = signal<Task[]>([]);
   loading = signal(false);
@@ -116,14 +118,23 @@ export class TaskList implements OnInit {
   }
 
   toggleStatus(task: Task) {
-    this.taskService.toggleTaskCompletion(task.id).subscribe({
-      next: () => this.loadTasks(),
-      error: (err) => {
-        this.errorMessage.set(err.error?.message || 'Failed to update status');
-      }
-    });
-  }
+  this.taskService.toggleTaskCompletion(task.id).subscribe({
+    next: () => {
+      this.loadTasks();
 
+      this.toastMessage.set(
+        task.isCompleted ? 'Task marked as Pending' : 'Task Completed'
+      );
+
+      this.showToast.set(true);
+
+      setTimeout(() => this.showToast.set(false), 2500);
+    },
+    error: () => {
+      this.errorMessage.set('Failed to update status');
+    }
+  });
+}
   editTask(id: number) {
     this.router.navigate(['/tasks/edit', id]);
   }
