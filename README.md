@@ -1,11 +1,13 @@
 # 🚀 Task Management System
 
+🔗 GitHub Repository: https://github.com/abadevops21/task-management-system
+
 A full-stack Task Management application built with:
 
-* ⚙️ .NET 10 Web API
-* 🌐 Angular
-* 🛢️ SQL Server
-* 🐳 Docker (prebuilt images)
+⚙️ .NET 10 Web API
+🌐 Angular
+🛢️ SQL Server
+🐳 Docker (prebuilt images)
 
 ---
 
