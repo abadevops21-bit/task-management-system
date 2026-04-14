@@ -100,7 +100,7 @@ builder.Services.AddRateLimiter(options =>
 
 builder.Services.AddAuthorization();
 
-
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", builder =>

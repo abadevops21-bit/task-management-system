@@ -88,4 +88,3 @@ public class TaskServiceTests
         result.IsCompleted.Should().BeTrue();
     }
 }
-}

@@ -7,7 +7,7 @@ import { Task, CreateTaskRequest, UpdateTaskRequest, TaskListResponse } from '..
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:5170/api/tasks'; // Adjust based on your backend
+  private apiUrl = 'http://localhost:5000/api/tasks'; // Adjust based on your backend
 
   constructor(private http: HttpClient) {}
 
