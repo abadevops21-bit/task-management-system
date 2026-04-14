@@ -6,4 +6,8 @@
     <Project Path="src/TaskManagement.Domain/TaskManagement.Domain.csproj" />
     <Project Path="src/TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TaskManagement.IntegrationTests/TaskManagement.IntegrationTests/TaskManagement.IntegrationTests.csproj" Id="c93bc7ed-d03a-4abd-94aa-5b9d2e06740d" />
+    <Project Path="tests/TaskManagement.UnitTests/TaskManagement.UnitTests/TaskManagement.UnitTests.csproj" Id="0157382d-0a0c-4c1f-ad69-c4c5b51c2d81" />
+  </Folder>
 </Solution>
